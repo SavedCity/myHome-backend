@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
 
@@ -15,7 +16,13 @@ const port = process.env.PORT || 3000;
 //     saveUninitialized: false,
 //   })
 // );
-app.use(cors());
+app.use(cookieParser());
+app.use(
+  cors({
+    origin: ["http://localhost:3001"],
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
