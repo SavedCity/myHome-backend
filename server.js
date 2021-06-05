@@ -27,21 +27,21 @@ app.use(
     credentials: true,
   })
 );
-app.use(express.static("public"));
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.static("public"));
+// app.use(express.urlencoded({ extended: true }));
 
 const decorController = require("./controllers/decor_controller.js");
 app.use("/home", decorController);
 const userController = require("./controllers/user_controller.js");
 app.use("/user", userController);
 
-const uri = process.env.ATLAS_URI;
+const uri = process.env.MDB_CONNECT;
 mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });
 
-const connection = mongoose.connection;
-connection.once("open", () => {
-  console.log("MongoDB database connection established successfully!");
-});
+// const connection = mongoose.connection;
+// connection.once("open", () => {
+//   console.log("MongoDB database connection established successfully!");
+// });
 
 app.listen(PORT, () => {
   console.log("server is running boi 🏠, port " + PORT);
