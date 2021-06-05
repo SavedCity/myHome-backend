@@ -64,6 +64,8 @@ users.post("/", async (req, res) => {
     res
       .cookie("token", token, {
         httpOnly: true,
+        secure: true,
+        sameSite: "none",
       })
       .send();
 
@@ -114,6 +116,8 @@ users.post("/login", async (req, res) => {
     res
       .cookie("token", token, {
         httpOnly: true,
+        secure: true,
+        sameSite: "none",
       })
       .send();
   } catch (err) {
@@ -129,6 +133,8 @@ users.get("/logout", (req, res) => {
     .cookie("token", "", {
       httpOnly: true,
       expires: new Date(0),
+      secure: true,
+      sameSite: "none",
     })
     .send();
 });

@@ -1,48 +1,41 @@
 const express = require("express");
-const cors = require("cors");
 const mongoose = require("mongoose");
-const session = require("express-session");
+const dotenv = require("dotenv");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
-require("dotenv").config();
+dotenv.config();
+
+// set up server
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server started on port: ${PORT}`));
 
-// app.use(
-//   session({
-//     secret: process.env.SECRET,
-//     resave: false,
-//     saveUninitialized: false,
-//   })
-// );
 app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [
-      "http://localhost:3000",
-      "https://home-decor-frontend.herokuapp.com",
-    ],
+    origin: ["http://localhost:3000"],
     credentials: true,
   })
 );
-// app.use(express.static("public"));
-// app.use(express.urlencoded({ extended: true }));
 
-const decorController = require("./controllers/decor_controller.js");
-app.use("/home", decorController);
-const userController = require("./controllers/user_controller.js");
-app.use("/user", userController);
+// connect to mongoDB
 
-const uri = process.env.MDB_CONNECT;
-mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true });
+mongoose.connect(
+  process.env.MDB_CONNECT,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  },
+  (err) => {
+    if (err) return console.error(err);
+    console.log("Connected to MongoDB");
+  }
+);
 
-// const connection = mongoose.connection;
-// connection.once("open", () => {
-//   console.log("MongoDB database connection established successfully!");
-// });
+// set up routes
 
-app.listen(PORT, () => {
-  console.log("server is running boi 🏠, port " + PORT);
-});
+app.use("/user", require("./controllers/decor_controller.js"));
+app.use("/home", require("./controllers/user_controller.js"));
