@@ -11,37 +11,33 @@ users.post("/", async (req, res) => {
 
     // validation
 
-    if (!username || !password || !passwordVerify) {
+    if (!username || !password || !passwordVerify)
       return res
         .status(400)
-        .json({ errorMessage: "Please enter all required fields" });
-    }
+        .json({ errorMessage: "Please enter all required fields." });
 
-    if (password.length < 4) {
+    if (password.length < 6)
       return res.status(400).json({
-        errorMessage: "Please enter password of at least 4 characters",
+        errorMessage: "Please enter a password of at least 6 characters.",
       });
-    }
 
-    if (password !== passwordVerify) {
+    if (password !== passwordVerify)
       return res.status(400).json({
-        errorMessage: "Password does not match",
+        errorMessage: "Please enter the same password twice.",
       });
-    }
 
     const existingUser = await User.findOne({ username });
-    if (existingUser) {
+    if (existingUser)
       return res.status(400).json({
-        errorMessage: "An account with this username already exists",
+        errorMessage: "An account with this username already exists.",
       });
-    }
 
     // hash the password
 
     const salt = await bcrypt.genSalt();
     const passwordHash = await bcrypt.hash(password, salt);
 
-    //save a new user account to the db
+    // save a new user account to the db
 
     const newUser = new User({
       username,
@@ -68,13 +64,13 @@ users.post("/", async (req, res) => {
         sameSite: "none",
       })
       .send();
-
-    console.log(token);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).send();
   }
 });
+
+// log in
 
 users.post("/login", async (req, res) => {
   try {
@@ -82,25 +78,25 @@ users.post("/login", async (req, res) => {
 
     // validate
 
-    if (!username || !password) {
+    if (!username || !password)
       return res
         .status(400)
-        .json({ errorMessage: "Please enter all required fields" });
-    }
+        .json({ errorMessage: "Please enter all required fields." });
 
     const existingUser = await User.findOne({ username });
-    if (!existingUser) {
-      return res.status(401).json({ errorMessage: "Wrong username" });
-    }
+    if (!existingUser)
+      return res
+        .status(401)
+        .json({ errorMessage: "Wrong username or password." });
 
     const passwordCorrect = await bcrypt.compare(
       password,
       existingUser.passwordHash
     );
-
-    if (!passwordCorrect) {
-      return res.status(401).json({ errorMessage: "Wrong password" });
-    }
+    if (!passwordCorrect)
+      return res
+        .status(401)
+        .json({ errorMessage: "Wrong username or password." });
 
     // sign the token
 
@@ -121,12 +117,10 @@ users.post("/login", async (req, res) => {
       })
       .send();
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).send();
   }
 });
-
-// log out
 
 users.get("/logout", (req, res) => {
   res
@@ -142,15 +136,12 @@ users.get("/logout", (req, res) => {
 users.get("/loggedIn", (req, res) => {
   try {
     const token = req.cookies.token;
-    if (!token) {
-      return res.json(false);
-    }
+    if (!token) return res.json(false);
 
     jwt.verify(token, process.env.JWT_SECRET);
 
     res.send(true);
   } catch (err) {
-    console.error(err);
     res.json(false);
   }
 });
