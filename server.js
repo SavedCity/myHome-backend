@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 // app.use(
 //   session({
@@ -16,14 +16,14 @@ const port = process.env.PORT || 3000;
 //     saveUninitialized: false,
 //   })
 // );
+app.use(express.json());
 app.use(cookieParser());
 app.use(
   cors({
-    origin: ["http://localhost:3001"],
+    origin: ["http://localhost:3000"],
     credentials: true,
   })
 );
-app.use(express.json());
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
@@ -40,6 +40,6 @@ connection.once("open", () => {
   console.log("MongoDB database connection established successfully!");
 });
 
-app.listen(port, () => {
-  console.log("server is running boi 🏠, port " + port);
+app.listen(PORT, () => {
+  console.log("server is running boi 🏠, port " + PORT);
 });
