@@ -37,5 +37,5 @@ mongoose.connect(
 
 // set up routes
 
-app.use("/user", require("./controllers/decor_controller.js"));
-app.use("/home", require("./controllers/user_controller.js"));
+app.use("/auth", require("./controllers/user_controller"));
+app.use("/home", require("./controllers/decor_controller"));

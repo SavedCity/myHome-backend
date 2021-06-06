@@ -1,11 +1,11 @@
-const bcrypt = require("bcrypt");
-const express = require("express");
+const router = require("express").Router();
+const User = require("../models/user_model");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const users = express.Router();
-const User = require("../models/user_model.js");
 
-// REGISTER
-users.post("/", async (req, res) => {
+// register
+
+router.post("/", async (req, res) => {
   try {
     const { username, password, passwordVerify } = req.body;
 
@@ -16,7 +16,7 @@ users.post("/", async (req, res) => {
         .status(400)
         .json({ errorMessage: "Please enter all required fields." });
 
-    if (password.length < 6)
+    if (password.length < 4)
       return res.status(400).json({
         errorMessage: "Please enter a password of at least 6 characters.",
       });
@@ -72,7 +72,7 @@ users.post("/", async (req, res) => {
 
 // log in
 
-users.post("/login", async (req, res) => {
+router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -122,7 +122,7 @@ users.post("/login", async (req, res) => {
   }
 });
 
-users.get("/logout", (req, res) => {
+router.get("/logout", (req, res) => {
   res
     .cookie("token", "", {
       httpOnly: true,
@@ -133,7 +133,7 @@ users.get("/logout", (req, res) => {
     .send();
 });
 
-users.get("/loggedIn", (req, res) => {
+router.get("/loggedIn", (req, res) => {
   try {
     const token = req.cookies.token;
     if (!token) return res.json(false);
@@ -146,4 +146,4 @@ users.get("/loggedIn", (req, res) => {
   }
 });
 
-module.exports = users;
+module.exports = router;
