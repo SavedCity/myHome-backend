@@ -7,6 +7,7 @@ const decorSchema = new Schema(
     culture: String,
     room: String,
     image: String,
+    image2: String,
     name: String,
     color: String,
     style: String,

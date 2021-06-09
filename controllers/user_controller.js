@@ -3,6 +3,12 @@ const User = require("../models/user_model");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+router.get("/", (req, res) => {
+  User.find({}, (err, foundUser) => {
+    res.json(foundUser);
+  });
+});
+
 // register
 
 router.post("/", async (req, res) => {

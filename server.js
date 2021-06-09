@@ -42,3 +42,4 @@ mongoose.connect(
 
 app.use("/auth", require("./controllers/user_controller"));
 app.use("/home", require("./controllers/decor_controller"));
+app.use("/house", require("./controllers/house_controller"));
