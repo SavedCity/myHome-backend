@@ -152,4 +152,17 @@ router.get("/loggedIn", (req, res) => {
   }
 });
 
+router.post("/getUserInfo", async (req, res) => {
+  // console.log("username is ", req);
+
+  const username = req.body.username;
+
+  const existingUser = await User.findOne({ username });
+
+  if (existingUser) return res.send(existingUser);
+  else {
+    return res.status(404).json({ errorMessage: "User not found" });
+  }
+});
+
 module.exports = router;
